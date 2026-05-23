@@ -1,5 +1,5 @@
 {
-  "version": "2.0",
-  "changelog": "Initial release of MotionVault",
+  "version": "3.0",
+  "changelog": "Favorites, History, Multi-prop apply, Export/Import, Surprise Me, Expression tester, Auto-update",
   "download": "https://raw.githubusercontent.com/Ryuvzaki/MotionVault/main/MotionVault_Ryuvzaki.jsx"
 }
