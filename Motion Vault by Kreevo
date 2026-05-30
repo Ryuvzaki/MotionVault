@@ -1,7 +1,6 @@
 // ============================================
 // MotionVault by Kreevo — v1.0
 // After Effects Dockable Panel Script
-// Install: Copy to ScriptUI Panels folder
 // ============================================
 
 (function MotionVault(thisObj) {
@@ -12,29 +11,28 @@
     var JSX_FILE    = "MotionVault_Kreevo.jsx";
     var VERSION_URL = "https://raw.githubusercontent.com/" + GITHUB_USER + "/" + REPO + "/main/version.json";
 
-    // ── EXPRESSIONS ──
     var expressions = [
-        { cat:"Motion",  name:"Wiggle",         code:"wiggle(3, 15)",                                                                         prop:"Position",   desc:"Shaky random motion"        },
-        { cat:"Motion",  name:"Loop",            code:'loopOut("cycle")',                                                                      prop:"Position",   desc:"Loop animation infinitely"  },
-        { cat:"Motion",  name:"Ping Pong",       code:'loopOut("pingpong")',                                                                   prop:"Position",   desc:"Loop back and forth"        },
-        { cat:"Motion",  name:"Sine Wave",       code:"[value[0]+Math.sin(time*2)*50, value[1]]",                                             prop:"Position",   desc:"Smooth wave motion"         },
-        { cat:"Motion",  name:"Orbit",           code:"[thisComp.width/2+Math.sin(time)*80, thisComp.height/2+Math.cos(time)*80]",            prop:"Position",   desc:"Circular orbit"             },
-        { cat:"Motion",  name:"Spin",            code:"time * 90",                                                                            prop:"Rotation",   desc:"Continuous 90deg/s spin"    },
-        { cat:"Motion",  name:"Bounce",          code:"amp=0.1;freq=2;decay=4;n=0;if(numKeys>0){n=nearestKey(time).index;if(key(n).time>time)n--;}if(n>0){t=time-key(n).time;v=velocityAtTime(key(n).time-0.001)*amp;value+v*Math.sin(freq*2*Math.PI*t)/Math.exp(decay*t);}else value", prop:"Position", desc:"Elastic bounce after keyframe" },
-        { cat:"Opacity", name:"Fade In",         code:"linear(time, inPoint, inPoint+0.5, 0, 100)",                                           prop:"Opacity",    desc:"Fade in on layer start"     },
-        { cat:"Opacity", name:"Fade Out",        code:"linear(time, outPoint-0.5, outPoint, 100, 0)",                                         prop:"Opacity",    desc:"Fade out on layer end"      },
-        { cat:"Opacity", name:"Fade In+Out",     code:"t1=inPoint+0.3;t2=outPoint-0.3;if(time<t1)linear(time,inPoint,t1,0,100)else if(time>t2)linear(time,t2,outPoint,100,0)else 100", prop:"Opacity", desc:"Auto fade in and out"        },
-        { cat:"Opacity", name:"Pulse",           code:"(Math.sin(time*4)+1)/2*100",                                                           prop:"Opacity",    desc:"Pulsing opacity"            },
-        { cat:"Opacity", name:"Blink",           code:"(time%1<0.5)?100:0",                                                                   prop:"Opacity",    desc:"Blinking every 1s"          },
-        { cat:"Scale",   name:"Breathe",         code:"s=Math.sin(time*2)*5+100;[s,s]",                                                       prop:"Scale",      desc:"Gentle breathing scale"     },
-        { cat:"Scale",   name:"Pop In",          code:"linear(time, inPoint, inPoint+0.2, 0, 100)",                                           prop:"Scale",      desc:"Quick pop in"               },
-        { cat:"Scale",   name:"Wiggle Scale",    code:"wiggle(2, 10)",                                                                        prop:"Scale",      desc:"Random scale shake"         },
-        { cat:"Text",    name:"Count Up",        code:"linear(time, 0, 3, 0, 100).toFixed(0)",                                                prop:"Source Text",desc:"Count 0 to 100 in 3s"       },
-        { cat:"Text",    name:"Stopwatch",       code:"timeToCurrentFormat()",                                                                prop:"Source Text",desc:"Show current time"           },
-        { cat:"Control", name:"Slider Link",     code:'thisComp.layer("Control").effect("Slider")("Slider")',                                 prop:"Opacity",    desc:"Link to slider control"     },
-        { cat:"Control", name:"Checkbox Toggle", code:'thisComp.layer("Control").effect("Checkbox Control")("Checkbox")?100:0',              prop:"Opacity",    desc:"Toggle with checkbox"       },
-        { cat:"Camera",  name:"Shake",           code:"wiggle(8, 15)",                                                                        prop:"Position",   desc:"Handheld camera shake"      },
-        { cat:"Camera",  name:"Depth Scale",     code:"s=1000/(1000-position[2]);[s,s]",                                                      prop:"Scale",      desc:"Scale by Z depth"           },
+        { cat:"Motion",  name:"Wiggle",         code:"wiggle(3, 15)",                                                                         prop:"Position",    desc:"Shaky random motion"         },
+        { cat:"Motion",  name:"Loop",            code:'loopOut("cycle")',                                                                      prop:"Position",    desc:"Loop animation infinitely"   },
+        { cat:"Motion",  name:"Ping Pong",       code:'loopOut("pingpong")',                                                                   prop:"Position",    desc:"Loop back and forth"         },
+        { cat:"Motion",  name:"Sine Wave",       code:"[value[0]+Math.sin(time*2)*50, value[1]]",                                             prop:"Position",    desc:"Smooth wave motion"          },
+        { cat:"Motion",  name:"Orbit",           code:"[thisComp.width/2+Math.sin(time)*80, thisComp.height/2+Math.cos(time)*80]",            prop:"Position",    desc:"Circular orbit"              },
+        { cat:"Motion",  name:"Spin",            code:"time * 90",                                                                            prop:"Rotation",    desc:"Continuous 90 deg/s"         },
+        { cat:"Motion",  name:"Bounce",          code:"amp=0.1;freq=2;decay=4;n=0;if(numKeys>0){n=nearestKey(time).index;if(key(n).time>time)n--;}if(n>0){t=time-key(n).time;v=velocityAtTime(key(n).time-0.001)*amp;value+v*Math.sin(freq*2*Math.PI*t)/Math.exp(decay*t);}else value", prop:"Position", desc:"Elastic bounce" },
+        { cat:"Opacity", name:"Fade In",         code:"linear(time, inPoint, inPoint+0.5, 0, 100)",                                           prop:"Opacity",     desc:"Fade in on start"            },
+        { cat:"Opacity", name:"Fade Out",        code:"linear(time, outPoint-0.5, outPoint, 100, 0)",                                         prop:"Opacity",     desc:"Fade out on end"             },
+        { cat:"Opacity", name:"Fade In+Out",     code:"t1=inPoint+0.3;t2=outPoint-0.3;if(time<t1)linear(time,inPoint,t1,0,100)else if(time>t2)linear(time,t2,outPoint,100,0)else 100", prop:"Opacity", desc:"Auto fade in and out" },
+        { cat:"Opacity", name:"Pulse",           code:"(Math.sin(time*4)+1)/2*100",                                                           prop:"Opacity",     desc:"Pulsing opacity"             },
+        { cat:"Opacity", name:"Blink",           code:"(time%1<0.5)?100:0",                                                                   prop:"Opacity",     desc:"Blinking every 1s"           },
+        { cat:"Scale",   name:"Breathe",         code:"s=Math.sin(time*2)*5+100;[s,s]",                                                       prop:"Scale",       desc:"Gentle breathing"            },
+        { cat:"Scale",   name:"Pop In",          code:"linear(time, inPoint, inPoint+0.2, 0, 100)",                                           prop:"Scale",       desc:"Quick pop in"                },
+        { cat:"Scale",   name:"Wiggle Scale",    code:"wiggle(2, 10)",                                                                        prop:"Scale",       desc:"Random scale shake"          },
+        { cat:"Text",    name:"Count Up",        code:"linear(time, 0, 3, 0, 100).toFixed(0)",                                                prop:"Source Text", desc:"Count 0 to 100 in 3s"        },
+        { cat:"Text",    name:"Stopwatch",       code:"timeToCurrentFormat()",                                                                prop:"Source Text", desc:"Show current time"            },
+        { cat:"Control", name:"Slider Link",     code:'thisComp.layer("Control").effect("Slider")("Slider")',                                 prop:"Opacity",     desc:"Link to slider"              },
+        { cat:"Control", name:"Checkbox Toggle", code:'thisComp.layer("Control").effect("Checkbox Control")("Checkbox")?100:0',              prop:"Opacity",     desc:"Toggle with checkbox"        },
+        { cat:"Camera",  name:"Shake",           code:"wiggle(8, 15)",                                                                        prop:"Position",    desc:"Handheld shake"              },
+        { cat:"Camera",  name:"Depth Scale",     code:"s=1000/(1000-position[2]);[s,s]",                                                      prop:"Scale",       desc:"Scale by Z depth"            },
     ];
 
     var propNames = ["Position","Rotation","Opacity","Scale","Source Text","Orientation"];
@@ -49,7 +47,6 @@
         "Source Text": function(l){ return l.property("Source Text"); },
     };
 
-    // ── STORAGE ──
     var favs={}, recent=[], custom=[];
 
     function load() {
@@ -57,14 +54,9 @@
         try{ if(app.settings.haveSetting("MV","recent")) recent=eval("("+app.settings.getSetting("MV","recent")+")"); }catch(e){}
         try{ if(app.settings.haveSetting("MV","custom")) custom=eval("("+app.settings.getSetting("MV","custom")+")"); }catch(e){}
     }
-
-    function saveFavs() {
-        try{ var a=[];for(var k in favs)if(favs[k])a.push('"'+k+'":true');app.settings.saveSetting("MV","favs","{"+a.join(",")+"}"); }catch(e){}
-    }
-    function saveRecent() {
-        try{ var a=[];for(var i=0;i<recent.length;i++)a.push('"'+recent[i].replace(/"/g,'\\"')+'"');app.settings.saveSetting("MV","recent","["+a.join(",")+"]"); }catch(e){}
-    }
-    function saveCustom() {
+    function saveFavs(){ try{ var a=[];for(var k in favs)if(favs[k])a.push('"'+k+'":true');app.settings.saveSetting("MV","favs","{"+a.join(",")+"}"); }catch(e){} }
+    function saveRecent(){ try{ var a=[];for(var i=0;i<recent.length;i++)a.push('"'+recent[i].replace(/"/g,'\\"')+'"');app.settings.saveSetting("MV","recent","["+a.join(",")+"]"); }catch(e){} }
+    function saveCustom(){
         try{
             var a=[];
             for(var i=0;i<custom.length;i++){
@@ -74,14 +66,10 @@
             app.settings.saveSetting("MV","custom","["+a.join(",")+"]");
         }catch(e){}
     }
-
     function addRecent(name){
         for(var i=recent.length-1;i>=0;i--)if(recent[i]===name)recent.splice(i,1);
-        recent.unshift(name);
-        if(recent.length>8)recent.pop();
-        saveRecent();
+        recent.unshift(name); if(recent.length>8)recent.pop(); saveRecent();
     }
-
     function allExprs(){
         var a=[];
         for(var i=0;i<expressions.length;i++)a.push(expressions[i]);
@@ -89,182 +77,228 @@
         return a;
     }
 
-    // ── AUTO UPDATE ──
-    function checkUpdate(silent) {
-        try {
-            // Step 1: download version.json via PowerShell
-            var tmpVer = new File(Folder.temp.absoluteURI + "/mv_ver.json");
-            if(tmpVer.exists) tmpVer.remove();
+    // HTTP via Socket
+    function httpGet(url){
+        try{
+            var noProto=url.replace("https://","").replace("http://","");
+            var slash=noProto.indexOf("/");
+            var host=noProto.substring(0,slash);
+            var path=noProto.substring(slash);
+            var sock=new Socket();
+            sock.timeout=10; sock.encoding="UTF-8";
+            if(!sock.open(host+":80")) return null;
+            sock.write("GET "+path+" HTTP/1.0\r\nHost: "+host+"\r\nUser-Agent: MotionVault/1.0\r\nConnection: close\r\n\r\n");
+            var resp="",chunk;
+            while((chunk=sock.read(4096))!=="") resp+=chunk;
+            sock.close();
+            var bi=resp.indexOf("\r\n\r\n");
+            return bi===-1?null:resp.substring(bi+4);
+        }catch(e){ return null; }
+    }
 
-            var psCmd = 'powershell -NoProfile -Command "try { Invoke-WebRequest -Uri \'' + VERSION_URL + '\' -OutFile \'' + tmpVer.fsName.replace(/\\/g,'\\\\') + '\' -UseBasicParsing } catch { exit 1 }"';
-            system.callSystem(psCmd);
-
-            // Wait up to 5s
-            var t=new Date().getTime();
-            while(!tmpVer.exists && new Date().getTime()-t<5000){}
-
-            if(!tmpVer.exists){
-                if(!silent) alert("Could not reach update server.\nCheck your internet connection.");
+    function checkUpdate(silent){
+        try{
+            var raw=httpGet(VERSION_URL);
+            if(!raw||raw.length<5){
+                if(!silent) alert("Could not reach update server.\nEnsure: Edit > Preferences > Scripting & Expressions\n> Allow Scripts to Write Files and Access Network  is ON.");
                 return;
             }
-
-            tmpVer.open("r");
-            var raw=tmpVer.read();
-            tmpVer.close();
-            tmpVer.remove();
-
-            // Parse JSON
-            var j=raw.indexOf("{");
-            if(j===-1){ if(!silent) alert("Invalid response from server."); return; }
+            var j=raw.indexOf("{"); if(j===-1){if(!silent)alert("Invalid response.");return;}
             var data=eval("("+raw.substring(j)+")");
-
-            if(!data.version){ if(!silent) alert("Could not read version info."); return; }
-
-            if(data.version===VERSION){
-                if(!silent) alert("You are on the latest version (v"+VERSION+").");
-                return;
-            }
-
-            // Step 2: new version found
-            var msg = "New version available!\n\n";
-            msg += "Current:  v" + VERSION + "\n";
-            msg += "Latest:   v" + data.version + "\n";
-            if(data.changelog) msg += "\nWhat's new:\n" + data.changelog + "\n";
-            msg += "\nInstall update now?";
-
+            if(!data.version){if(!silent)alert("Could not read version.");return;}
+            if(data.version===VERSION){if(!silent)alert("You are on the latest version (v"+VERSION+").");return;}
+            var msg="New version available!\n\nCurrent: v"+VERSION+"\nLatest:  v"+data.version;
+            if(data.changelog) msg+="\n\nWhat's new:\n"+data.changelog;
+            msg+="\n\nInstall now?";
             if(!confirm(msg)) return;
-
-            // Step 3: download new .jsx via PowerShell
-            var dlUrl = data.download || ("https://raw.githubusercontent.com/"+GITHUB_USER+"/"+REPO+"/main/"+JSX_FILE);
-            var tmpJsx = new File(Folder.temp.absoluteURI + "/MV_new.jsx");
-            if(tmpJsx.exists) tmpJsx.remove();
-
-            var dlCmd = 'powershell -NoProfile -Command "try { Invoke-WebRequest -Uri \'' + dlUrl + '\' -OutFile \'' + tmpJsx.fsName.replace(/\\/g,'\\\\') + '\' -UseBasicParsing } catch { exit 1 }"';
-            system.callSystem(dlCmd);
-
-            // Wait up to 10s
-            var t2=new Date().getTime();
-            while(!tmpJsx.exists && new Date().getTime()-t2<10000){}
-
-            if(!tmpJsx.exists){
-                alert("Download failed. Please try again.");
-                return;
-            }
-
-            // Step 4: verify downloaded file
-            tmpJsx.open("r");
-            var newCode=tmpJsx.read();
-            tmpJsx.close();
-            tmpJsx.remove();
-
-            // Check if valid JS (not HTML error page)
-            if(newCode.indexOf("function")===-1 && newCode.indexOf("//")===-1){
-                alert("Downloaded file appears invalid.\nPlease try again.");
-                return;
-            }
-
-            // Step 5: write to current script location
-            var thisFile = new File($.fileName);
-            if(!thisFile.exists){
-                alert("Cannot find script location.\nPlease reinstall manually.");
-                return;
-            }
-
-            thisFile.open("w");
-            thisFile.write(newCode);
-            thisFile.close();
-
-            alert("Updated to v" + data.version + "!\n\nPlease restart After Effects to apply the update.");
-
-        } catch(err) {
-            if(!silent) alert("Update failed:\n" + err.toString());
-        }
+            var dlUrl=data.download||("https://raw.githubusercontent.com/"+GITHUB_USER+"/"+REPO+"/main/"+JSX_FILE);
+            var newCode=httpGet(dlUrl);
+            if(!newCode||newCode.length<100){alert("Download failed. Try again.");return;}
+            if(newCode.indexOf("function")===-1||newCode.indexOf("<!DOCTYPE")!==-1){alert("Invalid file received. Try again.");return;}
+            var f=new File($.fileName);
+            if(!f.exists){alert("Cannot locate script file. Reinstall manually.");return;}
+            f.open("w"); f.write(newCode); f.close();
+            alert("Updated to v"+data.version+"!\nPlease restart After Effects.");
+        }catch(err){ if(!silent)alert("Update error:\n"+err.toString()); }
     }
 
     load();
 
-    // ── UI ──
-    function buildUI(thisObj) {
-        var win = (thisObj instanceof Panel) ? thisObj
-            : new Window("palette","MotionVault  —  by Kreevo",undefined,{resizeable:true});
+    function buildUI(thisObj){
+        var win=(thisObj instanceof Panel)?thisObj
+            :new Window("palette","MotionVault by Kreevo",undefined,{resizeable:true});
 
         win.orientation="column";
         win.alignChildren=["fill","top"];
-        win.spacing=6;
-        win.margins=[10,10,10,10];
+        win.spacing=0;
+        win.margins=[0,0,0,0];
 
-        // Header
+        // ── HEADER ──
         var hdr=win.add("group");
-        hdr.orientation="row"; hdr.alignChildren=["fill","center"]; hdr.spacing=6;
-        var hdrL=hdr.add("group");
-        hdrL.orientation="column"; hdrL.alignChildren=["left","center"]; hdrL.spacing=0;
-        hdrL.add("statictext",undefined,"MotionVault");
-        hdrL.add("statictext",undefined,"by Kreevo  ·  v"+VERSION);
-        var updBtn=hdr.add("button",undefined,"↑ Update");
-        updBtn.preferredSize=[80,24];
+        hdr.orientation="row";
+        hdr.alignChildren=["fill","center"];
+        hdr.margins=[10,10,10,8];
+        hdr.spacing=6;
+        hdr.preferredSize.height=48;
 
-        // Search
-        var sGrp=win.add("group");
-        sGrp.orientation="row"; sGrp.alignChildren=["fill","center"]; sGrp.spacing=4;
-        var sIn=sGrp.add("edittext",undefined,"");
-        sIn.preferredSize.height=24;
-        var clrBtn=sGrp.add("button",undefined,"✕");
-        clrBtn.preferredSize=[24,24];
+        var logoGroup=hdr.add("group");
+        logoGroup.orientation="column";
+        logoGroup.alignChildren=["left","center"];
+        logoGroup.spacing=1;
 
-        // Category
-        var cGrp=win.add("group");
-        cGrp.orientation="row"; cGrp.alignChildren=["left","center"]; cGrp.spacing=4;
-        var cDrop=cGrp.add("dropdownlist",undefined,cats);
-        cDrop.selection=0; cDrop.preferredSize.width=160;
-        var surprBtn=cGrp.add("button",undefined,"✦");
-        surprBtn.preferredSize=[24,24];
+        var logoLine=logoGroup.add("group");
+        logoLine.orientation="row";
+        logoLine.alignChildren=["left","center"];
+        logoLine.spacing=0;
 
-        // List
-        var lb=win.add("listbox",undefined,[],{
-            numberOfColumns:3, showHeaders:true,
+        var logoText=logoLine.add("statictext",undefined,"Motion");
+        var logoAccent=logoLine.add("statictext",undefined,"Vault");
+        var logoDot=logoLine.add("statictext",undefined,".");
+
+        var subText=logoGroup.add("statictext",undefined,"by kreevo  \u00B7  v"+VERSION);
+
+        var updBtn=hdr.add("button",undefined,"\u2191 Update");
+        updBtn.preferredSize=[72,26];
+
+        // ── DIVIDER ──
+        var div1=win.add("panel",undefined,"");
+        div1.preferredSize.height=1;
+        div1.margins=0;
+
+        // ── SEARCH + SURPRISE ──
+        var sRow=win.add("group");
+        sRow.orientation="row";
+        sRow.alignChildren=["fill","center"];
+        sRow.margins=[10,6,10,4];
+        sRow.spacing=4;
+
+        var sIn=sRow.add("edittext",undefined,"");
+        sIn.preferredSize.height=26;
+        sIn.helpTip="Search expressions...";
+
+        var clrBtn=sRow.add("button",undefined,"\u2715");
+        clrBtn.preferredSize=[26,26];
+
+        var surprBtn=sRow.add("button",undefined,"\u2726");
+        surprBtn.preferredSize=[26,26];
+        surprBtn.helpTip="Surprise me!";
+
+        // ── CATEGORY ──
+        var cRow=win.add("group");
+        cRow.orientation="row";
+        cRow.alignChildren=["left","center"];
+        cRow.margins=[10,2,10,4];
+        cRow.spacing=6;
+
+        var cLabel=cRow.add("statictext",undefined,"Category");
+        cLabel.preferredSize.width=55;
+
+        var cDrop=cRow.add("dropdownlist",undefined,cats);
+        cDrop.selection=0;
+        cDrop.preferredSize.width=150;
+
+        // ── LIST ──
+        var listWrap=win.add("group");
+        listWrap.orientation="column";
+        listWrap.alignChildren=["fill","top"];
+        listWrap.margins=[10,0,10,0];
+
+        var lb=listWrap.add("listbox",undefined,[],{
+            numberOfColumns:3,
+            showHeaders:true,
             columnTitles:["Name","Property","Description"],
-            columnWidths:[110,75,175]
+            columnWidths:[105,75,160]
         });
-        lb.preferredSize.height=190;
+        lb.preferredSize.height=180;
 
-        // Code preview
-        var pvPnl=win.add("panel",undefined,"Code:");
-        pvPnl.orientation="column"; pvPnl.alignChildren=["fill","top"]; pvPnl.margins=[6,14,6,6];
-        var pvTxt=pvPnl.add("edittext",undefined,"",{multiline:true,readonly:false});
-        pvTxt.preferredSize.height=50;
+        // ── DIVIDER ──
+        var div2=win.add("panel",undefined,"");
+        div2.preferredSize.height=1;
+        div2.margins=0;
 
-        // Apply to
-        var aGrp=win.add("group");
-        aGrp.orientation="row"; aGrp.alignChildren=["left","center"]; aGrp.spacing=6;
-        aGrp.add("statictext",undefined,"Apply to:");
-        var pDrop=aGrp.add("dropdownlist",undefined,propNames);
-        pDrop.selection=0; pDrop.preferredSize.width=110;
+        // ── CODE ──
+        var codeWrap=win.add("group");
+        codeWrap.orientation="column";
+        codeWrap.alignChildren=["fill","top"];
+        codeWrap.margins=[10,6,10,4];
+        codeWrap.spacing=4;
 
-        // Main buttons
-        var bGrp=win.add("group");
-        bGrp.orientation="row"; bGrp.alignChildren=["center","center"]; bGrp.spacing=5;
-        var copyBtn=bGrp.add("button",undefined,"Copy");       copyBtn.preferredSize.width=70;
-        var applyBtn=bGrp.add("button",undefined,"Apply to Layer"); applyBtn.preferredSize.width=120;
-        var remBtn=bGrp.add("button",undefined,"Remove");      remBtn.preferredSize.width=70;
+        var codeLabel=codeWrap.add("statictext",undefined,"Expression Code");
+        var pvTxt=codeWrap.add("edittext",undefined,"",{multiline:true,readonly:false});
+        pvTxt.preferredSize.height=46;
 
-        // Secondary buttons
-        var sGrp2=win.add("group");
-        sGrp2.orientation="row"; sGrp2.alignChildren=["center","center"]; sGrp2.spacing=5;
-        var favBtn=sGrp2.add("button",undefined,"☆ Fav");    favBtn.preferredSize.width=70;
-        var saveBtn=sGrp2.add("button",undefined,"+ Save");   saveBtn.preferredSize.width=70;
-        var delBtn=sGrp2.add("button",undefined,"− Delete");  delBtn.preferredSize.width=70;
-        var expBtn=sGrp2.add("button",undefined,"Export");    expBtn.preferredSize.width=60;
-        var impBtn=sGrp2.add("button",undefined,"Import");    impBtn.preferredSize.width=60;
+        // ── APPLY ROW ──
+        var applyRow=win.add("group");
+        applyRow.orientation="row";
+        applyRow.alignChildren=["left","center"];
+        applyRow.margins=[10,2,10,4];
+        applyRow.spacing=6;
 
-        // Stats
-        var stGrp=win.add("group");
-        stGrp.orientation="row"; stGrp.alignChildren=["center","center"];
-        var stTxt=stGrp.add("statictext",undefined,"");
+        var applyLabel=applyRow.add("statictext",undefined,"Apply to");
+        applyLabel.preferredSize.width=50;
+
+        var pDrop=applyRow.add("dropdownlist",undefined,propNames);
+        pDrop.selection=0;
+        pDrop.preferredSize.width=110;
+
+        // ── MAIN BUTTONS ──
+        var div3=win.add("panel",undefined,"");
+        div3.preferredSize.height=1;
+        div3.margins=0;
+
+        var mainBtns=win.add("group");
+        mainBtns.orientation="row";
+        mainBtns.alignChildren=["center","center"];
+        mainBtns.margins=[10,6,10,4];
+        mainBtns.spacing=5;
+
+        var copyBtn=mainBtns.add("button",undefined,"Copy");
+        copyBtn.preferredSize=[70,28];
+
+        var applyBtn=mainBtns.add("button",undefined,"Apply to Layer");
+        applyBtn.preferredSize=[115,28];
+
+        var remBtn=mainBtns.add("button",undefined,"Remove");
+        remBtn.preferredSize=[70,28];
+
+        // ── SECONDARY BUTTONS ──
+        var secBtns=win.add("group");
+        secBtns.orientation="row";
+        secBtns.alignChildren=["center","center"];
+        secBtns.margins=[10,2,10,4];
+        secBtns.spacing=4;
+
+        var favBtn=secBtns.add("button",undefined,"\u2606 Fav");
+        favBtn.preferredSize=[65,24];
+
+        var saveBtn=secBtns.add("button",undefined,"+ Save");
+        saveBtn.preferredSize=[65,24];
+
+        var delBtn=secBtns.add("button",undefined,"\u2212 Delete");
+        delBtn.preferredSize=[65,24];
+
+        var expBtn=secBtns.add("button",undefined,"Export");
+        expBtn.preferredSize=[55,24];
+
+        var impBtn=secBtns.add("button",undefined,"Import");
+        impBtn.preferredSize=[55,24];
+
+        // ── STATS / FOOTER ──
+        var div4=win.add("panel",undefined,"");
+        div4.preferredSize.height=1;
+        div4.margins=0;
+
+        var footer=win.add("group");
+        footer.orientation="row";
+        footer.alignChildren=["center","center"];
+        footer.margins=[10,4,10,6];
+
+        var stTxt=footer.add("statictext",undefined,"");
         stTxt.alignment=["center","center"];
 
         function refreshStats(){
             var fc=0; for(var k in favs)if(favs[k])fc++;
-            stTxt.text=(expressions.length+custom.length)+" exprs  ·  "+fc+" favs  ·  "+custom.length+" custom";
+            stTxt.text=(expressions.length+custom.length)+" expressions  \u00B7  "+fc+" favorites  \u00B7  "+custom.length+" custom";
         }
 
         // ── LOGIC ──
@@ -292,7 +326,7 @@
             lb.removeAll();
             var f=getFiltered();
             for(var i=0;i<f.length;i++){
-                var item=lb.add("item",(favs[f[i].name]?"★ ":"")+f[i].name);
+                var item=lb.add("item",(favs[f[i].name]?"\u2605 ":"")+f[i].name);
                 item.subItems[0].text=f[i].prop;
                 item.subItems[1].text=f[i].desc;
             }
@@ -309,7 +343,7 @@
         lb.onChange=function(){
             var e=getSelected(); if(!e)return;
             pvTxt.text=e.code; syncProp(e);
-            favBtn.text=favs[e.name]?"★ Unfav":"☆ Fav";
+            favBtn.text=favs[e.name]?"\u2605 Unfav":"\u2606 Fav";
         };
 
         sIn.onChanging=function(){ cDrop.selection=0; renderList(); };
@@ -320,8 +354,8 @@
             var all=allExprs(); if(!all.length)return;
             var e=all[Math.floor(Math.random()*all.length)];
             pvTxt.text=e.code; syncProp(e);
-            favBtn.text=favs[e.name]?"★ Unfav":"☆ Fav";
-            alert("✦  "+e.name+"\n"+e.desc);
+            favBtn.text=favs[e.name]?"\u2605 Unfav":"\u2606 Fav";
+            alert("\u2726  "+e.name+"\n\n"+e.desc);
         };
 
         copyBtn.onClick=function(){
@@ -347,11 +381,11 @@
             app.endUndoGroup();
             var e=getSelected(); if(e)addRecent(e.name);
             if(ok>0){
-                applyBtn.text="✓ Applied!";
-                var t=new Date().getTime(); while(new Date().getTime()-t<700){}
+                applyBtn.text="\u2713 Applied!";
+                var t=new Date().getTime(); while(new Date().getTime()-t<800){}
                 applyBtn.text="Apply to Layer";
             }
-            if(fail>0)alert("Applied: "+ok+"  |  Failed: "+fail+"\n(Wrong layer type)");
+            if(fail>0) alert("Applied: "+ok+"  |  Failed: "+fail+"\n(Wrong layer type for this property)");
             renderList();
         };
 
@@ -368,24 +402,31 @@
                 try{ var p=getter(layers[i]); if(p&&p.expression!==""){p.expression="";ok++;} }catch(er){}
             }
             app.endUndoGroup();
-            alert("Removed from "+ok+" layer(s).");
+            alert("Removed expression from "+ok+" layer(s).");
         };
 
         favBtn.onClick=function(){
             var e=getSelected(); if(!e){alert("Select an expression first.");return;}
             if(favs[e.name])delete favs[e.name]; else favs[e.name]=true;
-            saveFavs(); favBtn.text=favs[e.name]?"★ Unfav":"☆ Fav"; renderList();
+            saveFavs(); favBtn.text=favs[e.name]?"\u2605 Unfav":"\u2606 Fav"; renderList();
         };
 
         saveBtn.onClick=function(){
             var code=pvTxt.text; if(!code){alert("Write or select an expression first.");return;}
             var dlg=new Window("dialog","Save Expression");
-            dlg.orientation="column"; dlg.alignChildren=["fill","top"]; dlg.margins=14; dlg.spacing=8;
-            dlg.add("statictext",undefined,"Name:"); var nIn=dlg.add("edittext",undefined,"My Expression"); nIn.preferredSize.width=240;
-            dlg.add("statictext",undefined,"Description:"); var dIn=dlg.add("edittext",undefined,""); dIn.preferredSize.width=240;
-            var bb=dlg.add("group"); bb.alignment=["center","center"];
-            var ok=bb.add("button",undefined,"Save"); var ca=bb.add("button",undefined,"Cancel");
-            ok.onClick=function(){ custom.push({cat:"Mine",name:nIn.text,code:code,desc:dIn.text,prop:propNames[pDrop.selection.index]}); saveCustom(); renderList(); dlg.close(); alert("Saved!"); };
+            dlg.orientation="column"; dlg.alignChildren=["fill","top"]; dlg.margins=16; dlg.spacing=8;
+            dlg.add("statictext",undefined,"Name:");
+            var nIn=dlg.add("edittext",undefined,"My Expression"); nIn.preferredSize.width=250;
+            dlg.add("statictext",undefined,"Description:");
+            var dIn=dlg.add("edittext",undefined,""); dIn.preferredSize.width=250;
+            var bb=dlg.add("group"); bb.alignment=["center","center"]; bb.spacing=8;
+            var ok=bb.add("button",undefined,"Save");
+            var ca=bb.add("button",undefined,"Cancel");
+            ok.onClick=function(){
+                custom.push({cat:"Mine",name:nIn.text,code:code,desc:dIn.text,prop:propNames[pDrop.selection.index]});
+                saveCustom(); renderList(); dlg.close();
+                alert("Saved: "+nIn.text);
+            };
             ca.onClick=function(){ dlg.close(); };
             dlg.center(); dlg.show();
         };
@@ -394,46 +435,67 @@
             var e=getSelected(); if(!e||e.cat!=="Mine"){alert("Select a custom expression from 'Mine' first.");return;}
             for(var i=0;i<custom.length;i++)if(custom[i].name===e.name){custom.splice(i,1);break;}
             saveCustom(); renderList();
+            alert("Deleted.");
         };
 
         expBtn.onClick=function(){
             try{
-                var f=File.saveDialog("Export","JSON:*.json"); if(!f)return;
+                var f=File.saveDialog("Export Expressions","JSON:*.json"); if(!f)return;
                 f.open("w");
                 var a=[];
-                for(var i=0;i<custom.length;i++){var e=custom[i];a.push('{"name":"'+e.name.replace(/"/g,'\\"')+'","code":"'+e.code.replace(/\\/g,'\\\\').replace(/"/g,'\\"')+'","desc":"'+e.desc.replace(/"/g,'\\"')+'","prop":"'+e.prop+'"}');}
-                f.write("["+a.join(",")+"]"); f.close(); alert("Exported "+custom.length+" expressions.");
-            }catch(err){alert("Export failed: "+err);}
+                for(var i=0;i<custom.length;i++){
+                    var e=custom[i];
+                    a.push('{"name":"'+e.name.replace(/"/g,'\\"')+'","code":"'+e.code.replace(/\\/g,'\\\\').replace(/"/g,'\\"')+'","desc":"'+e.desc.replace(/"/g,'\\"')+'","prop":"'+e.prop+'"}');
+                }
+                f.write("["+a.join(",")+"]"); f.close();
+                alert("Exported "+custom.length+" expressions.");
+            }catch(err){ alert("Export failed: "+err); }
         };
 
         impBtn.onClick=function(){
             try{
-                var f=File.openDialog("Import","JSON:*.json"); if(!f)return;
+                var f=File.openDialog("Import Expressions","JSON:*.json"); if(!f)return;
                 f.open("r"); var c=f.read(); f.close();
                 var data=eval("("+c.substring(c.indexOf("["))+")"); var added=0;
-                for(var i=0;i<data.length;i++) if(data[i].name&&data[i].code){custom.push({cat:"Mine",name:data[i].name,code:data[i].code,desc:data[i].desc||"",prop:data[i].prop||"Position"});added++;}
-                saveCustom(); renderList(); alert("Imported "+added+" expressions.");
-            }catch(err){alert("Import failed: "+err);}
+                for(var i=0;i<data.length;i++)
+                    if(data[i].name&&data[i].code){
+                        custom.push({cat:"Mine",name:data[i].name,code:data[i].code,desc:data[i].desc||"",prop:data[i].prop||"Position"});
+                        added++;
+                    }
+                saveCustom(); renderList();
+                alert("Imported "+added+" expressions.");
+            }catch(err){ alert("Import failed: "+err); }
         };
 
         updBtn.onClick=function(){
             updBtn.text="Checking...";
             checkUpdate(false);
-            updBtn.text="↑ Update";
+            updBtn.text="\u2191 Update";
         };
 
         // Onboarding
         try{
-            if(!app.settings.haveSetting("MV","ob2")){
-                app.settings.saveSetting("MV","ob2","1");
+            if(!app.settings.haveSetting("MV","ob3")){
+                app.settings.saveSetting("MV","ob3","1");
                 var w=new Window("dialog","Welcome to MotionVault");
                 w.orientation="column"; w.alignChildren=["fill","top"]; w.margins=20; w.spacing=8;
-                w.add("statictext",undefined,"MotionVault  by Kreevo  —  v"+VERSION);
+                w.add("statictext",undefined,"MotionVault  by Kreevo  \u2014  v"+VERSION);
                 w.add("statictext",undefined," ");
-                var lines=["1. Select expression from list","2. Select your layer in timeline","3. Choose property  →  Apply to Layer","4. ☆ Fav to save favorites","5. + Save to add custom expressions","6. ↑ Update — auto updates from internet"];
+                var lines=[
+                    "1. Search or browse by category",
+                    "2. Click an expression to preview the code",
+                    "3. Select your layer in the timeline",
+                    "4. Choose property  \u2192  Apply to Layer",
+                    " ",
+                    "\u2606 Fav  \u2014  save favorites",
+                    "+ Save  \u2014  add your own expressions",
+                    "\u2726  \u2014  random surprise expression",
+                    "\u2191 Update  \u2014  auto-update from internet"
+                ];
                 for(var i=0;i<lines.length;i++) w.add("statictext",undefined,lines[i]);
                 w.add("statictext",undefined," ");
-                var gb=w.add("button",undefined,"Let's go →"); gb.alignment=["center","center"];
+                var gb=w.add("button",undefined,"Let's go \u2192");
+                gb.alignment=["center","center"];
                 gb.onClick=function(){ w.close(); };
                 w.center(); w.show();
             }
@@ -441,7 +503,7 @@
 
         renderList();
         if(win instanceof Window){ win.center(); win.show(); }
-        else { win.layout.layout(true); }
+        else{ win.layout.layout(true); }
         return win;
     }
 
